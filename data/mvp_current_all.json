@@ -1,0 +1,222 @@
+[
+  {
+    "season": 2025,
+    "player_name": "D.Maye",
+    "team": "NE",
+    "mvp_index": 100.0,
+    "epa_per_play": 0.304,
+    "total_tds": 35.0,
+    "total_yards": 4871.0,
+    "team_wins": 14.0,
+    "position": "QB"
+  },
+  {
+    "season": 2025,
+    "player_name": "P.Nacua",
+    "team": "LA",
+    "mvp_index": 100.0,
+    "epa_per_play": 1.16,
+    "total_tds": 11.0,
+    "total_yards": 1820.0,
+    "team_wins": 12.0,
+    "position": "WR"
+  },
+  {
+    "season": 2025,
+    "player_name": "M.Stafford",
+    "team": "LA",
+    "mvp_index": 99.2,
+    "epa_per_play": 0.199,
+    "total_tds": 46.0,
+    "total_yards": 4729.0,
+    "team_wins": 12.0,
+    "position": "QB"
+  },
+  {
+    "season": 2025,
+    "player_name": "J.Love",
+    "team": "GB",
+    "mvp_index": 83.1,
+    "epa_per_play": 0.264,
+    "total_tds": 23.0,
+    "total_yards": 3592.0,
+    "team_wins": 9.0,
+    "position": "QB"
+  },
+  {
+    "season": 2025,
+    "player_name": "D.Prescott",
+    "team": "DAL",
+    "mvp_index": 79.9,
+    "epa_per_play": 0.159,
+    "total_tds": 32.0,
+    "total_yards": 4741.0,
+    "team_wins": 7.0,
+    "position": "QB"
+  },
+  {
+    "season": 2025,
+    "player_name": "C.McCaffrey",
+    "team": "SF",
+    "mvp_index": 79.2,
+    "epa_per_play": 0.117,
+    "total_tds": 17.0,
+    "total_yards": 2106.0,
+    "team_wins": 12.0,
+    "position": "RB"
+  },
+  {
+    "season": 2025,
+    "player_name": "T.Lawrence",
+    "team": "JAX",
+    "mvp_index": 78.6,
+    "epa_per_play": 0.091,
+    "total_tds": 38.0,
+    "total_yards": 4376.0,
+    "team_wins": 13.0,
+    "position": "QB"
+  },
+  {
+    "season": 2025,
+    "player_name": "J.Allen",
+    "team": "BUF",
+    "mvp_index": 78.5,
+    "epa_per_play": 0.182,
+    "total_tds": 39.0,
+    "total_yards": 4267.0,
+    "team_wins": 12.0,
+    "position": "QB"
+  },
+  {
+    "season": 2025,
+    "player_name": "J.Goff",
+    "team": "DET",
+    "mvp_index": 77.6,
+    "epa_per_play": 0.158,
+    "total_tds": 34.0,
+    "total_yards": 4617.0,
+    "team_wins": 9.0,
+    "position": "QB"
+  },
+  {
+    "season": 2025,
+    "player_name": "B.Nix",
+    "team": "DEN",
+    "mvp_index": 77.3,
+    "epa_per_play": 0.108,
+    "total_tds": 30.0,
+    "total_yards": 4304.0,
+    "team_wins": 14.0,
+    "position": "QB"
+  },
+  {
+    "season": 2025,
+    "player_name": "J.Gibbs",
+    "team": "DET",
+    "mvp_index": 76.4,
+    "epa_per_play": 0.085,
+    "total_tds": 18.0,
+    "total_yards": 1836.0,
+    "team_wins": 9.0,
+    "position": "RB"
+  },
+  {
+    "season": 2025,
+    "player_name": "B.Purdy",
+    "team": "SF",
+    "mvp_index": 76.3,
+    "epa_per_play": 0.231,
+    "total_tds": 23.0,
+    "total_yards": 2318.0,
+    "team_wins": 12.0,
+    "position": "QB"
+  },
+  {
+    "season": 2025,
+    "player_name": "J.Smith-Njigba",
+    "team": "SEA",
+    "mvp_index": 75.7,
+    "epa_per_play": 1.126,
+    "total_tds": 10.0,
+    "total_yards": 1829.0,
+    "team_wins": 14.0,
+    "position": "WR"
+  },
+  {
+    "season": 2025,
+    "player_name": "C.Williams",
+    "team": "CHI",
+    "mvp_index": 75.0,
+    "epa_per_play": 0.082,
+    "total_tds": 31.0,
+    "total_yards": 4337.0,
+    "team_wins": 11.0,
+    "position": "QB"
+  },
+  {
+    "season": 2025,
+    "player_name": "D.Henry",
+    "team": "BAL",
+    "mvp_index": 74.5,
+    "epa_per_play": 0.051,
+    "total_tds": 16.0,
+    "total_yards": 1745.0,
+    "team_wins": 8.0,
+    "position": "RB"
+  },
+  {
+    "season": 2025,
+    "player_name": "C.Brown",
+    "team": "CIN",
+    "mvp_index": 71.9,
+    "epa_per_play": 0.049,
+    "total_tds": 11.0,
+    "total_yards": 1433.0,
+    "team_wins": 6.0,
+    "position": "RB"
+  },
+  {
+    "season": 2025,
+    "player_name": "J.Taylor",
+    "team": "IND",
+    "mvp_index": 70.9,
+    "epa_per_play": 0.095,
+    "total_tds": 20.0,
+    "total_yards": 1961.0,
+    "team_wins": 8.0,
+    "position": "RB"
+  },
+  {
+    "season": 2025,
+    "player_name": "J.Cook",
+    "team": "BUF",
+    "mvp_index": 70.5,
+    "epa_per_play": 0.056,
+    "total_tds": 14.0,
+    "total_yards": 1912.0,
+    "team_wins": 12.0,
+    "position": "RB"
+  },
+  {
+    "season": 2025,
+    "player_name": "T.Etienne",
+    "team": "JAX",
+    "mvp_index": 70.1,
+    "epa_per_play": 0.011,
+    "total_tds": 13.0,
+    "total_yards": 1399.0,
+    "team_wins": 13.0,
+    "position": "RB"
+  },
+  {
+    "season": 2025,
+    "player_name": "C.Stroud",
+    "team": "HOU",
+    "mvp_index": 66.3,
+    "epa_per_play": 0.126,
+    "total_tds": 20.0,
+    "total_yards": 3255.0,
+    "team_wins": 12.0,
+    "position": "QB"
+  }
+]

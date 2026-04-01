@@ -1,0 +1,21 @@
+{
+  "epa_per_play": 0.0707,
+  "total_epa": 0.1004,
+  "any_a": 0.0846,
+  "total_yards": 0.0443,
+  "total_tds": 0.0996,
+  "turnovers": 0.0493,
+  "pts_per_drive": 0.0142,
+  "team_wins": 0.0211,
+  "late_epa": 0.053,
+  "late_epa_per_play": 0.0553,
+  "late_tds": 0.0399,
+  "pct_team_yards": 0.0327,
+  "pct_team_tds": 0.0425,
+  "wpa_total": 0.1064,
+  "success_rate": 0.055,
+  "negative_play_rate": 0.0705,
+  "cpoe": 0.0065,
+  "win_pct": 0.0195,
+  "offensive_allpros_nqb": 0.0345
+}

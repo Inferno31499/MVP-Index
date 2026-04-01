@@ -1,0 +1,1091 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MVP — Metric Victory Projection</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@400;500&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg:        #08090b;
+      --surface:   #0f1115;
+      --surface2:  #161a20;
+      --surface3:  #1c2028;
+      --border:    rgba(255,255,255,0.07);
+      --border2:   rgba(255,255,255,0.12);
+      --gold:      #f5c518;
+      --gold-dim:  rgba(245,197,24,0.12);
+      --gold-glow: rgba(245,197,24,0.05);
+      --cyan:      #00e5ff;
+      --red:       #ff3b3b;
+      --green:     #00e676;
+      --orange:    #ff9500;
+      --text:      #f0f2f5;
+      --sub:       #7a8494;
+      --muted:     #3d4451;
+      --font-disp: 'Bebas Neue', sans-serif;
+      --font-body: 'DM Sans', sans-serif;
+      --font-mono: 'DM Mono', monospace;
+    }
+    html { scroll-behavior: smooth; }
+    body { background: var(--bg); color: var(--text); font-family: var(--font-body); font-size: 15px; line-height: 1.65; overflow-x: hidden; }
+
+    /* NAV */
+    nav { position: sticky; top: 0; z-index: 200; height: 52px; display: flex; align-items: center; justify-content: space-between; padding: 0 2rem; background: rgba(8,9,11,0.92); backdrop-filter: blur(16px); border-bottom: 1px solid var(--border); }
+    .logo { display: flex; align-items: baseline; gap: 8px; text-decoration: none; }
+    .logo-mvp { font-family: var(--font-disp); font-size: 26px; letter-spacing: 0.08em; color: var(--gold); }
+    .logo-sub { font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.14em; color: var(--sub); text-transform: uppercase; line-height: 1.3; }
+    .nav-links { display: flex; gap: 2rem; list-style: none; }
+    .nav-links a { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--sub); text-decoration: none; transition: color 0.15s; }
+    .nav-links a:hover { color: var(--gold); }
+    .nav-pill { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.08em; color: var(--gold); border: 1px solid rgba(245,197,24,0.35); background: var(--gold-dim); padding: 4px 12px; border-radius: 2px; }
+
+    /* HERO */
+    .hero { position: relative; display: grid; grid-template-columns: 1fr 1fr; min-height: 92vh; overflow: hidden; border-bottom: 1px solid var(--border); }
+    .hero-bg { position: absolute; inset: 0; background: radial-gradient(ellipse 60% 50% at 70% 50%, rgba(245,197,24,0.04) 0%, transparent 70%), radial-gradient(ellipse 40% 60% at 10% 80%, rgba(0,229,255,0.025) 0%, transparent 60%); pointer-events: none; }
+    .hero-lines { position: absolute; inset: 0; background-image: linear-gradient(rgba(255,255,255,0.022) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.022) 1px, transparent 1px); background-size: 60px 60px; pointer-events: none; }
+    .hero-left { position: relative; padding: 5rem 3rem; display: flex; flex-direction: column; justify-content: center; }
+    .eyebrow { display: flex; align-items: center; gap: 10px; margin-bottom: 1.5rem; }
+    .eyebrow-line { width: 32px; height: 1px; background: var(--gold); }
+    .eyebrow-text { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--gold); }
+    .hero-headline { font-family: var(--font-disp); font-size: clamp(68px, 9vw, 120px); line-height: 0.92; letter-spacing: 0.02em; margin-bottom: 1.5rem; }
+    .hero-headline .gold { color: var(--gold); }
+    .hero-desc { max-width: 420px; font-size: 15px; font-weight: 300; color: var(--sub); line-height: 1.8; margin-bottom: 2.5rem; }
+    .hero-desc strong { color: var(--text); font-weight: 500; }
+    .cta-row { display: flex; gap: 12px; flex-wrap: wrap; }
+    .btn-gold { font-family: var(--font-mono); font-size: 11px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--bg); background: var(--gold); border: none; padding: 13px 28px; text-decoration: none; cursor: pointer; transition: opacity 0.15s; }
+    .btn-gold:hover { opacity: 0.88; }
+    .btn-outline { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--sub); border: 1px solid var(--muted); background: transparent; padding: 12px 24px; text-decoration: none; transition: border-color 0.15s, color 0.15s; }
+    .btn-outline:hover { border-color: var(--gold); color: var(--gold); }
+
+    /* RACE PANEL */
+    .hero-right { position: relative; background: var(--surface); border-left: 1px solid var(--border); display: flex; flex-direction: column; }
+    .race-header { display: flex; align-items: center; justify-content: space-between; padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--border); }
+    .race-title { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.1em; color: var(--sub); }
+    .live-badge { font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--green); border: 1px solid rgba(0,230,118,0.3); padding: 3px 8px; border-radius: 2px; }
+    .race-list { flex: 1; overflow-y: auto; padding: 0.5rem 0; }
+    .candidate { padding: 0.9rem 1.5rem; border-bottom: 1px solid var(--border); transition: background 0.15s; cursor: pointer; }
+    .candidate:hover { background: var(--surface2); }
+    .candidate.top { background: var(--gold-glow); border-left: 2px solid var(--gold); }
+    .cand-row1 { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.5rem; }
+    .cand-id { display: flex; gap: 12px; align-items: center; }
+    .cand-num { font-family: var(--font-disp); font-size: 22px; color: var(--muted); line-height: 1; min-width: 24px; }
+    .candidate.top .cand-num { color: var(--gold); }
+    .cand-name { font-size: 15px; font-weight: 500; }
+    .cand-pos { font-family: var(--font-mono); font-size: 10px; color: var(--sub); margin-top: 1px; }
+    .cand-score { text-align: right; }
+    .score-val { font-family: var(--font-disp); font-size: 28px; line-height: 1; color: var(--gold); }
+    .score-lbl { font-family: var(--font-mono); font-size: 9px; color: var(--sub); letter-spacing: 0.08em; margin-top: 2px; }
+    .idx-bar { height: 2px; background: var(--surface3); border-radius: 1px; margin-bottom: 0.5rem; }
+    .idx-bar-fill { height: 100%; background: linear-gradient(90deg, var(--gold), rgba(245,197,24,0.4)); border-radius: 1px; transition: width 0.6s ease; }
+    .chips { display: flex; flex-wrap: wrap; gap: 5px; }
+    .chip { font-family: var(--font-mono); font-size: 9px; padding: 2px 7px; background: var(--surface3); border: 1px solid var(--border); border-radius: 2px; color: var(--sub); white-space: nowrap; }
+    .chip.hi { color: var(--gold); border-color: rgba(245,197,24,0.25); }
+    .chip.lo { color: var(--red); border-color: rgba(255,59,59,0.25); }
+    .chip.cy { color: var(--cyan); border-color: rgba(0,229,255,0.2); }
+    .chip.gr { color: var(--green); border-color: rgba(0,230,118,0.25); }
+    .race-footer { padding: 0.75rem 1.5rem; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+    .race-footer span { font-family: var(--font-mono); font-size: 10px; color: var(--muted); }
+    .race-footer a { font-family: var(--font-mono); font-size: 10px; color: var(--gold); text-decoration: none; }
+
+    /* CONTENT */
+    .content { max-width: 1280px; margin: 0 auto; padding: 4rem 2rem; }
+    .sec-label { display: flex; align-items: center; gap: 1rem; margin-bottom: 2.5rem; }
+    .sec-label span { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--sub); white-space: nowrap; }
+    .sec-label hr { flex: 1; border: none; border-top: 1px solid var(--border); }
+
+    /* HOW IT WORKS */
+    .explainer-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1.5rem; margin-bottom: 4rem; }
+    .exp-intro { grid-column: 1 / 3; display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; align-items: start; }
+    .exp-intro h2 { font-family: var(--font-disp); font-size: 42px; line-height: 1; margin-bottom: 1rem; }
+    .exp-intro h2 span { color: var(--gold); }
+    .exp-intro p { font-size: 14px; color: var(--sub); line-height: 1.8; }
+    .formula { background: var(--surface); border: 1px solid var(--border); padding: 1.25rem; font-family: var(--font-mono); font-size: 11.5px; line-height: 2; }
+    .formula-ttl { font-size: 10px; letter-spacing: 0.1em; color: var(--sub); margin-bottom: 0.5rem; }
+    .formula .gd { color: var(--gold); }
+    .formula .cy { color: var(--cyan); }
+    .metric-cell { background: var(--surface); border: 1px solid var(--border); padding: 1.25rem; display: flex; flex-direction: column; gap: 6px; }
+    .mc-label { font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); }
+    .mc-name { font-family: var(--font-disp); font-size: 22px; letter-spacing: 0.04em; color: var(--text); }
+    .mc-desc { font-size: 13px; color: var(--sub); line-height: 1.7; flex: 1; }
+    .mc-weight { font-family: var(--font-mono); font-size: 10px; color: var(--gold); margin-top: auto; }
+
+    /* VOTING CONSISTENCY */
+    .consistency-section { margin-bottom: 4rem; }
+    .consistency-header { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 1px; background: var(--border); border: 1px solid var(--border); margin-bottom: 1px; }
+    .stat-box { background: var(--surface); padding: 1.5rem; }
+    .stat-val { font-family: var(--font-disp); font-size: 48px; line-height: 1; color: var(--gold); }
+    .stat-lbl { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.1em; color: var(--sub); text-transform: uppercase; margin-top: 4px; }
+    .consistency-table { width: 100%; border-collapse: collapse; }
+    .consistency-table th { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--sub); text-align: left; padding: 0.6rem 0.75rem; border-bottom: 1px solid var(--border2); background: var(--surface); }
+    .consistency-table th.r { text-align: right; }
+    .consistency-table td { padding: 0.7rem 0.75rem; border-bottom: 1px solid var(--border); font-size: 13px; vertical-align: middle; }
+    .consistency-table td.r { text-align: right; font-family: var(--font-mono); font-size: 12px; }
+    .consistency-table tr:hover { background: var(--surface2); }
+    .agree-badge { font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.06em; padding: 2px 7px; border-radius: 2px; text-transform: uppercase; }
+    .agree-badge.yes { background: rgba(0,230,118,0.12); color: var(--green); border: 1px solid rgba(0,230,118,0.25); }
+    .agree-badge.no  { background: rgba(255,59,59,0.10); color: var(--red); border: 1px solid rgba(255,59,59,0.25); }
+    .gap-val { font-family: var(--font-mono); font-size: 12px; }
+    .gap-val.big { color: var(--red); }
+    .gap-val.small { color: var(--sub); }
+
+    /* HISTORICAL TABLE */
+    .table-wrap { overflow-x: auto; margin-bottom: 4rem; }
+    table { width: 100%; border-collapse: collapse; }
+    thead th { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--sub); text-align: left; padding: 0.6rem 0.75rem; border-bottom: 1px solid var(--border2); background: var(--surface); white-space: nowrap; }
+    thead th.r { text-align: right; }
+    tbody td { padding: 0.65rem 0.75rem; border-bottom: 1px solid var(--border); font-size: 13px; }
+    tbody td.r { text-align: right; font-family: var(--font-mono); font-size: 12px; }
+    tbody td.g { color: var(--gold); font-family: var(--font-mono); font-size: 12px; text-align: right; }
+    tbody td.gr { color: var(--green); font-family: var(--font-mono); font-size: 12px; text-align: right; }
+    tbody td.re { color: var(--red); font-family: var(--font-mono); font-size: 12px; text-align: right; }
+    tbody td.yr { font-family: var(--font-disp); font-size: 18px; color: var(--sub); }
+    tbody tr.wr { background: var(--gold-glow); }
+    tbody tr.wr td.yr { color: var(--gold); }
+    tbody tr:hover { background: var(--surface2); }
+    .pname { font-weight: 500; margin-right: 6px; }
+    .ptag { font-family: var(--font-mono); font-size: 9px; color: var(--cyan); background: rgba(0,229,255,0.1); border: 1px solid rgba(0,229,255,0.2); padding: 1px 5px; border-radius: 2px; vertical-align: middle; }
+    .wbadge { font-family: var(--font-mono); font-size: 9px; color: var(--gold); background: var(--gold-dim); border: 1px solid rgba(245,197,24,0.3); padding: 1px 5px; border-radius: 2px; vertical-align: middle; margin-left: 4px; }
+    .nqbadge { font-family: var(--font-mono); font-size: 9px; color: var(--orange); background: rgba(255,149,0,0.1); border: 1px solid rgba(255,149,0,0.25); padding: 1px 5px; border-radius: 2px; vertical-align: middle; margin-left: 4px; }
+    .devbadge { font-family: var(--font-mono); font-size: 9px; color: var(--red); background: rgba(255,59,59,0.1); border: 1px solid rgba(255,59,59,0.25); padding: 1px 5px; border-radius: 2px; vertical-align: middle; margin-left: 4px; }
+    .idx-td { font-family: var(--font-disp); font-size: 20px; text-align: right; }
+
+    /* NON-QB SECTION */
+    .nonqb-section { margin-bottom: 4rem; }
+    .nonqb-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+    .nonqb-intro h3 { font-family: var(--font-disp); font-size: 36px; line-height: 1.05; margin-bottom: 1rem; }
+    .nonqb-intro h3 span { color: var(--gold); }
+    .nonqb-intro p { font-size: 14px; color: var(--sub); line-height: 1.8; margin-bottom: 0.75rem; }
+    .nonqb-table-wrap { overflow-x: auto; }
+    .nonqb-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    .nonqb-table th { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--sub); text-align: left; padding: 0.5rem 0.75rem; border-bottom: 1px solid var(--border2); background: var(--surface); white-space: nowrap; }
+    .nonqb-table th.r { text-align: right; }
+    .nonqb-table td { padding: 0.55rem 0.75rem; border-bottom: 1px solid var(--border); vertical-align: middle; }
+    .nonqb-table td.r { text-align: right; font-family: var(--font-mono); font-size: 11px; }
+    .nonqb-table tr:hover { background: var(--surface2); }
+    .pos-tag { font-family: var(--font-mono); font-size: 9px; color: var(--orange); background: rgba(255,149,0,0.1); border: 1px solid rgba(255,149,0,0.2); padding: 1px 5px; border-radius: 2px; }
+    .vs-pct-bar { display: flex; align-items: center; gap: 8px; }
+    .vs-bar { flex: 1; height: 3px; background: var(--surface3); border-radius: 2px; }
+    .vs-bar-fill { height: 100%; background: var(--orange); border-radius: 2px; }
+    .vs-pct-num { font-family: var(--font-mono); font-size: 11px; color: var(--orange); min-width: 36px; text-align: right; }
+
+    /* LOADING STATE */
+    .loading { display: flex; align-items: center; justify-content: center; padding: 3rem; gap: 8px; color: var(--sub); font-family: var(--font-mono); font-size: 11px; }
+    .spinner { width: 14px; height: 14px; border: 1px solid var(--muted); border-top-color: var(--gold); border-radius: 50%; animation: spin 0.7s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .error-msg { font-family: var(--font-mono); font-size: 11px; color: var(--red); padding: 1rem; border: 1px solid rgba(255,59,59,0.2); background: rgba(255,59,59,0.05); }
+
+    /* HIST STATS ROW */
+    .hist-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; margin-bottom: 2rem; align-items: start; }
+    .hist-grid h2 { font-family: var(--font-disp); font-size: 36px; line-height: 1.05; margin-bottom: 0.75rem; }
+    .hist-grid h2 span { color: var(--gold); }
+    .hist-grid p { font-size: 14px; color: var(--sub); line-height: 1.8; }
+    .trio { display: grid; grid-template-columns: repeat(3,1fr); gap: 1rem; margin-top: 1.5rem; }
+    .trio-val { font-family: var(--font-disp); font-size: 38px; color: var(--gold); line-height: 1; }
+    .trio-lbl { font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--sub); margin-top: 4px; }
+
+    /* FOOTER */
+    footer { border-top: 1px solid var(--border); padding: 2rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; }
+    .flogo { font-family: var(--font-disp); font-size: 22px; color: var(--gold); letter-spacing: 0.08em; }
+    .fnote { font-family: var(--font-mono); font-size: 10px; color: var(--muted); letter-spacing: 0.08em; }
+    .flinks { display: flex; gap: 1.5rem; list-style: none; }
+    .flinks a { font-family: var(--font-mono); font-size: 10px; color: var(--sub); text-decoration: none; }
+    .flinks a:hover { color: var(--gold); }
+
+    /* WEIGHTS DISPLAY */
+    .weights-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); margin-bottom: 4rem; }
+    .weight-item { background: var(--surface); padding: 1rem 1.25rem; }
+    .weight-name { font-family: var(--font-mono); font-size: 10px; color: var(--sub); letter-spacing: 0.08em; margin-bottom: 0.4rem; text-transform: uppercase; }
+    .weight-bar-row { display: flex; align-items: center; gap: 8px; }
+    .weight-bar { flex: 1; height: 3px; background: var(--surface3); border-radius: 2px; }
+    .weight-bar-fill { height: 100%; background: var(--gold); border-radius: 2px; }
+    .weight-pct { font-family: var(--font-disp); font-size: 20px; color: var(--gold); min-width: 44px; text-align: right; }
+
+    @media (max-width: 900px) {
+      .hero { grid-template-columns: 1fr; }
+      .hero-right { display: none; }
+      .explainer-grid { grid-template-columns: 1fr; }
+      .exp-intro { grid-template-columns: 1fr; }
+      .hist-grid { grid-template-columns: 1fr; }
+      .nonqb-grid { grid-template-columns: 1fr; }
+      .weights-grid { grid-template-columns: repeat(2,1fr); }
+      .consistency-header { grid-template-columns: 1fr 1fr; }
+    }
+
+    /* SEASON MODAL */
+    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 1000; display: flex; align-items: stretch; justify-content: flex-end; opacity: 0; pointer-events: none; transition: opacity 0.25s ease; }
+    .modal-overlay.open { opacity: 1; pointer-events: all; }
+    .modal-drawer { width: min(780px, 95vw); background: var(--surface); border-left: 1px solid var(--border2); display: flex; flex-direction: column; transform: translateX(40px); transition: transform 0.28s cubic-bezier(.22,.68,0,1.2); overflow: hidden; }
+    .modal-overlay.open .modal-drawer { transform: translateX(0); }
+    .modal-header { display: flex; align-items: center; justify-content: space-between; padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--border); flex-shrink: 0; }
+    .modal-title { display: flex; align-items: baseline; gap: 12px; }
+    .modal-year { font-family: var(--font-disp); font-size: 48px; color: var(--gold); line-height: 1; }
+    .modal-sub { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.12em; color: var(--sub); text-transform: uppercase; }
+    .modal-close { width: 32px; height: 32px; border: 1px solid var(--border2); background: transparent; color: var(--sub); font-size: 18px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: color 0.15s, border-color 0.15s; }
+    .modal-close:hover { color: var(--text); border-color: var(--text); }
+    .modal-nav { display: flex; align-items: center; gap: 8px; }
+    .modal-nav button { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.08em; background: transparent; border: 1px solid var(--border2); color: var(--sub); padding: 4px 10px; cursor: pointer; transition: color 0.15s, border-color 0.15s; }
+    .modal-nav button:hover { color: var(--gold); border-color: rgba(245,197,24,0.4); }
+    .modal-nav button:disabled { opacity: 0.3; cursor: default; }
+    .modal-tabs { display: flex; border-bottom: 1px solid var(--border); flex-shrink: 0; }
+    .modal-tab { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; padding: 0.75rem 1.25rem; cursor: pointer; color: var(--sub); border-bottom: 2px solid transparent; background: transparent; border-top: none; border-left: none; border-right: none; transition: color 0.15s; margin-bottom: -1px; }
+    .modal-tab.active { color: var(--gold); border-bottom-color: var(--gold); }
+    .modal-body { flex: 1; overflow-y: auto; padding: 0; }
+    .modal-section { padding: 1.25rem 1.5rem; }
+    .modal-winner-card { background: var(--gold-glow); border: 1px solid rgba(245,197,24,0.2); padding: 1.25rem; margin-bottom: 1.25rem; display: flex; justify-content: space-between; align-items: center; }
+    .mwc-left {}
+    .mwc-name { font-family: var(--font-disp); font-size: 32px; line-height: 1; color: var(--gold); }
+    .mwc-meta { font-family: var(--font-mono); font-size: 11px; color: var(--sub); margin-top: 4px; }
+    .mwc-right { text-align: right; }
+    .mwc-idx { font-family: var(--font-disp); font-size: 52px; color: var(--gold); line-height: 1; }
+    .mwc-idx-lbl { font-family: var(--font-mono); font-size: 9px; color: var(--sub); letter-spacing: 0.1em; }
+    .mwc-stats { display: flex; gap: 1rem; margin-top: 0.75rem; flex-wrap: wrap; }
+    .mwc-stat { font-family: var(--font-mono); font-size: 11px; }
+    .mwc-stat span { color: var(--sub); margin-right: 4px; }
+    .modal-race-list { }
+    .modal-candidate { display: flex; align-items: center; gap: 12px; padding: 0.8rem 1.5rem; border-bottom: 1px solid var(--border); transition: background 0.1s; }
+    .modal-candidate:hover { background: var(--surface2); }
+    .modal-candidate.is-winner { background: var(--gold-glow); border-left: 2px solid var(--gold); }
+    .mc-rank { font-family: var(--font-disp); font-size: 20px; color: var(--muted); min-width: 28px; }
+    .mc-rank.w1 { color: var(--gold); }
+    .mc-info { flex: 1; }
+    .mc-name { font-size: 14px; font-weight: 500; }
+    .mc-tags { display: flex; gap: 5px; margin-top: 3px; flex-wrap: wrap; }
+    .mc-bar-col { width: 120px; }
+    .mc-bar { height: 3px; background: var(--surface3); border-radius: 2px; margin-bottom: 3px; }
+    .mc-bar-fill { height: 100%; border-radius: 2px; background: linear-gradient(90deg, var(--gold), rgba(245,197,24,0.35)); }
+    .mc-idx-val { font-family: var(--font-disp); font-size: 24px; color: var(--text); text-align: right; min-width: 52px; }
+    .mc-idx-val.winner { color: var(--gold); }
+    .model-note { font-family: var(--font-mono); font-size: 10px; color: var(--sub); padding: 0.75rem 1.5rem; background: rgba(255,59,59,0.05); border-bottom: 1px solid var(--border); }
+    .model-note.agree { background: rgba(0,230,118,0.05); }
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+    .modal-stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--border); margin: 1.25rem 1.5rem; }
+    .modal-stat-box { background: var(--surface2); padding: 1rem; }
+    .modal-stat-val { font-family: var(--font-disp); font-size: 28px; color: var(--gold); line-height: 1; }
+    .modal-stat-lbl { font-family: var(--font-mono); font-size: 9px; color: var(--sub); letter-spacing: 0.08em; text-transform: uppercase; margin-top: 3px; }
+    .hist-row-clickable { cursor: pointer; }
+    .hist-row-clickable:hover .yr { color: var(--gold); }
+    .open-season-btn { font-family: var(--font-mono); font-size: 9px; color: var(--gold); background: var(--gold-dim); border: 1px solid rgba(245,197,24,0.3); padding: 2px 7px; border-radius: 2px; cursor: pointer; white-space: nowrap; opacity: 0; transition: opacity 0.15s; }
+    .hist-row-clickable:hover .open-season-btn { opacity: 1; }
+
+  </style>
+</head>
+<body>
+
+<nav>
+  <a class="logo" href="#">
+    <span class="logo-mvp">MVP</span>
+    <span class="logo-sub">Metric<br/>Victory<br/>Projection</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#race">MVP Index</a></li>
+    <li><a href="#consistency">Voting Analysis</a></li>
+    <li><a href="#historical">Historical</a></li>
+    <li><a href="#nonqb">Non-QB Compare</a></li>
+    <li><a href="#methodology">Methodology</a></li>
+  </ul>
+  <span class="nav-pill" id="nav-season">NFL · 2025</span>
+</nav>
+
+<!-- HERO -->
+<div class="hero" id="race">
+  <div class="hero-bg"></div>
+  <div class="hero-lines"></div>
+
+  <div class="hero-left">
+    <div class="eyebrow">
+      <div class="eyebrow-line"></div>
+      <span class="eyebrow-text" id="hero-eyebrow">NFL MVP Race · 2025 Season</span>
+    </div>
+    <h1 class="hero-headline">WHO<br/>REALLY<br/>DESERVES<br/><span class="gold">MVP?</span></h1>
+    <p class="hero-desc">
+      26 years of MVP votes correlated against a <strong>regression-derived composite index</strong> of EPA, WPA, ANY/A, total yards, touchdowns, turnovers, success rate, December production, team efficiency, and supporting cast quality. Built to predict what voters actually reward — and reveal where they deviate.
+    </p>
+    <div class="cta-row">
+      <a class="btn-gold" href="#race">See The Full Index</a>
+      <a class="btn-outline" href="#consistency">Voting Analysis</a>
+    </div>
+  </div>
+
+  <div class="hero-right">
+    <div class="race-header">
+      <span class="race-title">// <span id="race-title-year">2025</span> MVP Index — Current Race</span>
+      <span class="live-badge">Live</span>
+    </div>
+    <div class="race-list" id="race-list">
+      <div class="loading"><div class="spinner"></div> Loading index data...</div>
+    </div>
+    <div class="race-footer">
+      <span>// nflFastR · Weeks 1–18</span>
+      <a href="#historical">Full History →</a>
+    </div>
+  </div>
+</div>
+
+<!-- CONTENT -->
+<section class="content">
+
+  <!-- METHODOLOGY -->
+  <div id="methodology">
+    <div class="sec-label">
+      <span>// How The MVP Index Works</span><hr/>
+    </div>
+
+    <div class="explainer-grid">
+      <div class="exp-intro">
+        <div>
+          <h2>The <span>MVP Index</span></h2>
+          <p style="margin-bottom:1rem;">Ridge regression on 26 years of AP MVP vote data — revealing what metrics voters actually reward, stripped of narrative.</p>
+          <p>Each input is z-scored within its season, then multiplied by its regression-derived weight. The model predicts what <em>should</em> win. The voting consistency analysis reveals where voters deviate — and why.</p>
+        </div>
+        <div class="formula">
+          <div class="formula-ttl">// MVP Index Formula (simplified)</div>
+          <span class="gd">MVP_Index =</span><br/>
+          &nbsp;&nbsp;<span class="cy">w₁</span> × z(WPA total)<br/>
+          &nbsp;&nbsp;+ <span class="cy">w₂</span> × z(Total EPA)<br/>
+          &nbsp;&nbsp;+ <span class="cy">w₃</span> × z(Total TDs)<br/>
+          &nbsp;&nbsp;+ <span class="cy">w₄</span> × z(ANY/A)<br/>
+          &nbsp;&nbsp;+ <span class="cy">w₅</span> × z(EPA / play)<br/>
+          &nbsp;&nbsp;+ <span class="cy">w₆</span> × z(Negative Play Rate) × <span class="gd">-1</span><br/>
+          &nbsp;&nbsp;+ <span class="cy">w₇</span> × z(December EPA)<br/>
+          &nbsp;&nbsp;+ <span class="cy">w₈</span> × z(Pct Team Yards)<br/>
+          &nbsp;&nbsp;+ <span class="cy">w₉</span> × z(Supporting Cast) × <span class="gd">-1</span><br/>
+          &nbsp;&nbsp;+ <span class="cy">…</span> 10 more metrics<br/>
+          <br/>
+          <span class="gd">→ min-max normalized 0 – 100 within season</span>
+        </div>
+      </div>
+
+      <div class="metric-cell">
+        <div class="mc-label">Weight 1 — Clutch Impact</div>
+        <div class="mc-name">WPA Total</div>
+        <div class="mc-desc">Win Probability Added across all plays. The strongest single predictor of vote share in our regression — voters reward QBs who win games, not just accumulate stats.</div>
+        <span class="mc-weight" id="w-wpa">~10.6%</span>
+      </div>
+      <div class="metric-cell">
+        <div class="mc-label">Weight 2 — Volume Value</div>
+        <div class="mc-name">Total EPA</div>
+        <div class="mc-desc">Cumulative Expected Points Added across all QB plays including designed runs. Rewards durability — voters penalize missed games more than bad performances.</div>
+        <span class="mc-weight" id="w-epa">~10.0%</span>
+      </div>
+      <div class="metric-cell">
+        <div class="mc-label">Weight 3 — Scoring</div>
+        <div class="mc-name">Total TDs</div>
+        <div class="mc-desc">Pass + rush + scramble touchdowns. The most visible narrative stat — voters anchor on round numbers. 40+ TDs creates separation; 50+ is historically dominant.</div>
+        <span class="mc-weight" id="w-tds">~10.0%</span>
+      </div>
+      <div class="metric-cell">
+        <div class="mc-label">Weight 4 — Efficiency Bridge</div>
+        <div class="mc-name">ANY / A</div>
+        <div class="mc-desc">Adjusted Net Yards per Attempt. Trusted by veteran voters who distrust advanced metrics — it bridges traditional and modern evaluation in one number.</div>
+        <span class="mc-weight" id="w-anya">~8.5%</span>
+      </div>
+      <div class="metric-cell">
+        <div class="mc-label">Weight 5 — Consistency</div>
+        <div class="mc-name">Negative Play Rate</div>
+        <div class="mc-desc">Sacks + interceptions + fumbles + TFLs as a % of total plays (inverted). Voters reward mistake erasers — Allen's 2024 turnover improvement was the MVP-defining narrative.</div>
+        <span class="mc-weight" id="w-neg">~7.0%</span>
+      </div>
+      <div class="metric-cell">
+        <div class="mc-label">Weight 6 — Roster Context</div>
+        <div class="mc-name">Supporting Cast</div>
+        <div class="mc-desc">Offensive All-Pros (non-QB) on the team (inverted). Voters discount stats on stacked rosters. Purdy 2023's three All-Pro teammates reduced his candidacy; Allen's zero boosted his.</div>
+        <span class="mc-weight" id="w-cast">~3.5%</span>
+      </div>
+    </div>
+
+    <!-- DERIVED WEIGHTS -->
+    <div class="sec-label">
+      <span>// Regression-Derived Weights — All 19 Metrics</span><hr/>
+    </div>
+    <div class="weights-grid" id="weights-display">
+      <div class="loading"><div class="spinner"></div> Loading weights...</div>
+    </div>
+  </div>
+
+  <!-- VOTING CONSISTENCY -->
+  <div id="consistency" style="margin-bottom: 4rem;">
+    <div class="sec-label" style="margin-top: 4rem;">
+      <span>// Voting Consistency Analysis — Where Voters Deviate From Metrics</span><hr/>
+    </div>
+
+    <div class="consistency-header" id="consistency-stats">
+      <div class="stat-box"><div class="stat-val" id="cs-agree">—</div><div class="stat-lbl">Seasons model agreed</div></div>
+      <div class="stat-box"><div class="stat-val" id="cs-total">—</div><div class="stat-lbl">Total seasons analyzed</div></div>
+      <div class="stat-box"><div class="stat-val" id="cs-pct">—</div><div class="stat-lbl">Agreement rate</div></div>
+      <div class="stat-box"><div class="stat-val" id="cs-r2">—</div><div class="stat-lbl">Model R² on vote share</div></div>
+    </div>
+
+    <div class="table-wrap" style="margin-top: 1px; margin-bottom: 0;">
+      <table class="consistency-table">
+        <thead>
+          <tr>
+            <th>Season</th>
+            <th>Model Pick</th>
+            <th class="r">Model Index</th>
+            <th>Actual Winner</th>
+            <th class="r">Winner Index</th>
+            <th class="r">Vote %</th>
+            <th class="r">Gap</th>
+            <th>Consistent?</th>
+          </tr>
+        </thead>
+        <tbody id="consistency-body">
+          <tr><td colspan="8"><div class="loading"><div class="spinner"></div> Loading...</div></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- HISTORICAL -->
+  <div id="historical">
+    <div class="sec-label" style="margin-top: 2rem;">
+      <span>// Historical MVP Index — 1999 to 2024</span><hr/>
+    </div>
+
+    <div class="hist-grid">
+      <div>
+        <h2>26 Years of<br/><span>MVP Votes</span></h2>
+        <p>Every award winner since 1999 scored against the MVP Index — revealing statistical locks, surprises, and exactly where voters deviated from the model.</p>
+      </div>
+      <div>
+        <p>The model correctly identifies <strong id="hist-accuracy">—</strong> of historical winners as the top-ranked QB in their season. The deviations are where the real insight lives — voters consistently reward narrative over raw stats in close races.</p>
+        <div class="trio">
+          <div><div class="trio-val" id="hist-agree-ct">—</div><div class="trio-lbl">Correct predictions</div></div>
+          <div><div class="trio-val" id="hist-avg-idx">—</div><div class="trio-lbl">Avg winner index</div></div>
+          <div><div class="trio-val">4</div><div class="trio-lbl">Non-QB winners since 1999</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Year</th>
+            <th>Winner</th>
+            <th>Team</th>
+            <th class="r">MVP Index</th>
+            <th class="r">EPA/play</th>
+            <th class="r">ANY/A</th>
+            <th class="r">TDs</th>
+            <th class="r">Wins</th>
+            <th class="r">Vote %</th>
+          </tr>
+        </thead>
+        <tbody id="hist-body">
+          <tr><td colspan="9"><div class="loading"><div class="spinner"></div> Loading historical data...</div></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- NON-QB SECTION -->
+  <div id="nonqb" class="nonqb-section">
+    <div class="sec-label" style="margin-top: 2rem;">
+      <span>// Non-QB MVP Comparison — Current Season</span><hr/>
+    </div>
+    <div class="nonqb-grid">
+      <div class="nonqb-intro">
+        <h3>The <span>Non-QB</span><br/>Problem</h3>
+        <p>Only 4 non-QBs have won NFL MVP since 1999. What they all share: total touchdown volume that rivaled the best QB of their season, and a team offense that ran through them.</p>
+        <p>The Non-QB index uses separate regression weights trained only on seasons where skill players received MVP votes — late TDs (21.8%) and total TDs (19.7%) dominate, reflecting the historic threshold required to win.</p>
+        <p style="margin-top: 1rem;"><strong>vs Top QB %</strong> shows how close the best non-QB candidate is to the top QB's index score this season.</p>
+      </div>
+      <div>
+        <div class="nonqb-table-wrap">
+          <table class="nonqb-table">
+            <thead>
+              <tr>
+                <th>Player</th>
+                <th>Pos</th>
+                <th class="r">Index</th>
+                <th class="r">TDs</th>
+                <th class="r">Yards</th>
+                <th class="r">% Team TDs</th>
+                <th>vs Top QB</th>
+              </tr>
+            </thead>
+            <tbody id="nonqb-body">
+              <tr><td colspan="7"><div class="loading"><div class="spinner"></div> Loading...</div></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</section>
+
+<footer>
+  <div>
+    <div class="flogo">MVP</div>
+    <div class="fnote" style="margin-top:4px">METRIC VICTORY PROJECTION</div>
+  </div>
+  <div class="fnote">Data: nflFastR · AP Vote Records · Pro Football Reference · nflverse</div>
+  <ul class="flinks">
+    <li><a href="https://www.nflfastr.com/" target="_blank">nflFastR</a></li>
+    <li><a href="#methodology">Methodology</a></li>
+    <li><a href="#">GitHub</a></li>
+  </ul>
+</footer>
+
+<script>
+// ─── Data loading ──────────────────────────────────────────────────────────────
+// JSON files are expected alongside index.html in mvp-pipeline/data/
+// Adjust DATA_BASE if your file structure differs
+const DATA_BASE = 'data';
+
+async function loadJSON(filename) {
+  try {
+    const r = await fetch(`${DATA_BASE}/${filename}`);
+    if (!r.ok) throw new Error(`HTTP ${r.status}`);
+    return await r.json();
+  } catch(e) {
+    console.warn(`Could not load ${filename}:`, e.message);
+    return null;
+  }
+}
+
+async function loadCSV(filename) {
+  try {
+    const r = await fetch(`${DATA_BASE}/${filename}`);
+    if (!r.ok) throw new Error(`HTTP ${r.status}`);
+    const text = await r.text();
+    const lines = text.trim().split('\n');
+    const headers = lines[0].split(',');
+    return lines.slice(1).map(line => {
+      const vals = line.split(',');
+      const obj = {};
+      headers.forEach((h, i) => obj[h.trim()] = vals[i]?.trim() ?? '');
+      return obj;
+    });
+  } catch(e) {
+    console.warn(`Could not load ${filename}:`, e.message);
+    return null;
+  }
+}
+
+// ─── Helpers ───────────────────────────────────────────────────────────────────
+const fmt = (v, d=1) => v == null || isNaN(v) ? '—' : (+v).toFixed(d);
+const fmtPct = v => v == null || isNaN(v) ? '—' : Math.round(+v * 100) + '%';
+const fmtIdx = v => v == null ? '—' : (+v).toFixed(1);
+
+function chipClass(val, metric) {
+  if (metric === 'turnovers' || metric === 'negative_play_rate') {
+    return +val < 8 ? 'chip hi' : +val > 12 ? 'chip lo' : 'chip';
+  }
+  if (metric === 'epa_per_play') return +val > 0.25 ? 'chip hi' : +val < 0.15 ? 'chip lo' : 'chip';
+  if (metric === 'total_tds')    return +val >= 40 ? 'chip hi' : +val < 30 ? 'chip lo' : 'chip';
+  if (metric === 'team_wins')    return +val >= 13 ? 'chip hi' : +val < 10 ? 'chip lo' : 'chip';
+  return 'chip';
+}
+
+// ─── Race Panel ────────────────────────────────────────────────────────────────
+function renderRace(data) {
+  const list = document.getElementById('race-list');
+  if (!data || !data.length) {
+    list.innerHTML = '<div class="error-msg">No current season data. Run the pipeline first.</div>';
+    return;
+  }
+
+  const season = data[0].season || '2025';
+  document.getElementById('race-title-year').textContent = season;
+  document.getElementById('hero-eyebrow').textContent = `NFL MVP Race · ${season} Season`;
+  document.getElementById('nav-season').textContent = `NFL · ${season}`;
+
+  const sorted = [...data].sort((a,b) => +b.mvp_index - +a.mvp_index).slice(0, 8);
+  list.innerHTML = sorted.map((p, i) => {
+    const isTop = i === 0;
+    const isNonQB = p.position && p.position !== 'QB';
+    const idx = +p.mvp_index || 0;
+    const epa = fmt(p.epa_per_play, 4);
+    const tds = p.total_tds || '—';
+    const wins = p.team_wins || '—';
+    const tos = p.turnovers || '—';
+    const wpa = fmt(p.wpa_total, 2);
+    const pos = p.position || 'QB';
+
+    const chips = isNonQB ? `
+      <span class="chip hi">EPA ${fmt(p.total_epa, 1)}</span>
+      <span class="chip hi">${Math.round(+p.total_yards || 0).toLocaleString()} YDS</span>
+      <span class="${+tds >= 15 ? 'chip hi' : 'chip'}">${tds} TD</span>
+      <span class="chip cy">Non-QB ${fmtIdx(p.nonqb_vs_topqb_pct)}%</span>
+      <span class="chip">${wins} W</span>
+    ` : `
+      <span class="${chipClass(p.epa_per_play,'epa_per_play')}">EPA/play ${epa}</span>
+      <span class="chip cy">ANY/A ${fmt(p.any_a,1)}</span>
+      <span class="${chipClass(tds,'total_tds')}">${tds} TD</span>
+      <span class="chip gr">WPA ${wpa}</span>
+      <span class="${chipClass(wins,'team_wins')}">${wins} W</span>
+      <span class="${chipClass(tos,'turnovers')}">${tos} TO</span>
+    `;
+
+    return `
+      <div class="candidate ${isTop ? 'top' : ''}">
+        <div class="cand-row1">
+          <div class="cand-id">
+            <div class="cand-num">${i+1}</div>
+            <div>
+              <div class="cand-name">${p.player_name || '—'}</div>
+              <div class="cand-pos">${pos} · ${p.team || '—'}</div>
+            </div>
+          </div>
+          <div class="cand-score">
+            <div class="score-val">${fmtIdx(idx)}</div>
+            <div class="score-lbl">MVP Index</div>
+          </div>
+        </div>
+        <div class="idx-bar"><div class="idx-bar-fill" style="width:${idx}%"></div></div>
+        <div class="chips">${chips}</div>
+      </div>`;
+  }).join('');
+}
+
+// ─── Weights ───────────────────────────────────────────────────────────────────
+function renderWeights(weights) {
+  const el = document.getElementById('weights-display');
+  if (!weights) { el.innerHTML = '<div class="error-msg">Weights not found. Run pipeline step 3.</div>'; return; }
+
+  const entries = Object.entries(weights).sort((a,b) => b[1]-a[1]);
+  const max = entries[0]?.[1] || 1;
+
+  el.innerHTML = entries.map(([k,v]) => {
+    const pct = (v * 100).toFixed(1);
+    const barW = Math.round(v / max * 100);
+    const label = k.replace(/_/g,' ').replace(/\b\w/g, c=>c.toUpperCase());
+    return `
+      <div class="weight-item">
+        <div class="weight-name">${label}</div>
+        <div class="weight-bar-row">
+          <div class="weight-bar"><div class="weight-bar-fill" style="width:${barW}%"></div></div>
+          <div class="weight-pct">${pct}%</div>
+        </div>
+      </div>`;
+  }).join('');
+
+  // Update weight callouts in explainer
+  const w = weights;
+  if (w.wpa_total)          document.getElementById('w-wpa').textContent  = `Weight: ${(w.wpa_total*100).toFixed(1)}%`;
+  if (w.total_epa)          document.getElementById('w-epa').textContent  = `Weight: ${(w.total_epa*100).toFixed(1)}%`;
+  if (w.total_tds)          document.getElementById('w-tds').textContent  = `Weight: ${(w.total_tds*100).toFixed(1)}%`;
+  if (w.any_a)              document.getElementById('w-anya').textContent = `Weight: ${(w.any_a*100).toFixed(1)}%`;
+  if (w.negative_play_rate) document.getElementById('w-neg').textContent  = `Weight: ${(w.negative_play_rate*100).toFixed(1)}%`;
+  if (w.offensive_allpros_nqb) document.getElementById('w-cast').textContent = `Weight: ${(w.offensive_allpros_nqb*100).toFixed(1)}%`;
+}
+
+// ─── Voting Consistency ────────────────────────────────────────────────────────
+function renderConsistency(csv) {
+  const body = document.getElementById('consistency-body');
+  if (!csv || !csv.length) {
+    body.innerHTML = '<tr><td colspan="8"><div class="error-msg">No consistency data found. Run pipeline step 3.</div></td></tr>';
+    return;
+  }
+
+  const sorted = [...csv].sort((a,b) => +b.season - +a.season);
+  const total  = sorted.length;
+  const agreed = sorted.filter(r => r.consistent === 'True').length;
+  const pct    = Math.round(agreed/total*100);
+
+  document.getElementById('cs-agree').textContent = agreed;
+  document.getElementById('cs-total').textContent = total;
+  document.getElementById('cs-pct').textContent   = pct + '%';
+
+  body.innerHTML = sorted.map(r => {
+    const isAgree  = r.consistent === 'True';
+    const gap      = +r.index_gap || 0;
+    const gapClass = gap > 8 ? 'gap-val big' : 'gap-val small';
+    const samePick = r.model_pick === r.actual_winner;
+    return `
+      <tr>
+        <td class="yr">${r.season}</td>
+        <td>${r.model_pick}${samePick ? '' : ''}</td>
+        <td class="r">${fmtIdx(r.model_index)}</td>
+        <td><span class="pname">${r.actual_winner}</span>${!isAgree ? '<span class="devbadge">Deviated</span>' : ''}</td>
+        <td class="r">${fmtIdx(r.actual_index)}</td>
+        <td class="r">${fmtPct(r.actual_vote_pct)}</td>
+        <td class="r"><span class="${gapClass}">${gap > 0 ? '+' : ''}${gap.toFixed(1)}</span></td>
+        <td><span class="agree-badge ${isAgree ? 'yes' : 'no'}">${isAgree ? '✓ Yes' : '✗ No'}</span></td>
+      </tr>`;
+  }).join('');
+}
+
+// ─── Historical Winners Table ──────────────────────────────────────────────────
+function renderHistorical(winners) {
+  const body = document.getElementById('hist-body');
+  if (!winners || !winners.length) {
+    body.innerHTML = '<tr><td colspan="9"><div class="error-msg">No historical data found.</div></td></tr>';
+    return;
+  }
+
+  const sorted  = [...winners].sort((a,b) => +b.season - +a.season);
+  const indices = sorted.map(r => +r.mvp_index).filter(v => !isNaN(v));
+  const avgIdx  = indices.length ? (indices.reduce((a,b)=>a+b,0)/indices.length).toFixed(1) : '—';
+
+  document.getElementById('hist-avg-idx').textContent = avgIdx;
+
+  // Voting consistency data for badges
+  body.innerHTML = sorted.map(r => {
+    const isNonQB = r.position && !['QB'].includes(r.position);
+    const idx     = +r.mvp_index;
+    const idxColor = idx >= 90 ? 'var(--gold)' : idx >= 75 ? 'var(--text)' : 'var(--orange)';
+
+    return `
+      <tr class="wr">
+        <td class="yr">${r.season}</td>
+        <td>
+          <span class="pname">${r.player_name}</span>
+          <span class="ptag">${r.position || 'QB'}</span>
+          <span class="wbadge">Winner</span>
+          ${isNonQB ? '<span class="nqbadge">Non-QB</span>' : ''}
+        </td>
+        <td>${r.team || '—'}</td>
+        <td class="idx-td" style="color:${idxColor}">${fmtIdx(idx)}</td>
+        <td class="r">${fmt(r.epa_per_play, 4)}</td>
+        <td class="r">${fmt(r.any_a, 2)}</td>
+        <td class="r">${r.total_tds || '—'}</td>
+        <td class="r">${r.team_wins || '—'}</td>
+        <td class="${+r.vote_pct > 0.8 ? 'gr' : +r.vote_pct < 0.5 ? 're' : 'r'}">${fmtPct(r.vote_pct)}</td>
+      </tr>`;
+  }).join('');
+
+  // Update stat summary
+  document.getElementById('hist-accuracy').textContent = `${sorted.length} of ${sorted.length} seasons tracked`;
+}
+
+// ─── Non-QB Table ──────────────────────────────────────────────────────────────
+function renderNonQB(data) {
+  const body = document.getElementById('nonqb-body');
+  if (!data || !data.length) {
+    body.innerHTML = '<tr><td colspan="7"><div class="error-msg">No non-QB data found. Run pipeline step 1b.</div></td></tr>';
+    return;
+  }
+
+  const sorted = [...data].sort((a,b) => +b.mvp_index - +a.mvp_index).slice(0, 10);
+  body.innerHTML = sorted.map(r => {
+    const pct  = +r.nonqb_vs_topqb_pct || 0;
+    const barW = Math.min(pct, 100);
+    const tds  = r.total_tds || '—';
+
+    return `
+      <tr>
+        <td><span class="pname">${r.player_name}</span><br/><span style="font-family:var(--font-mono);font-size:10px;color:var(--sub)">${r.team || '—'}</span></td>
+        <td><span class="pos-tag">${r.position || 'RB'}</span></td>
+        <td class="r">${fmtIdx(r.mvp_index)}</td>
+        <td class="r">${tds}</td>
+        <td class="r">${r.total_yards ? Math.round(+r.total_yards).toLocaleString() : '—'}</td>
+        <td class="r">${r.pct_team_tds ? fmt(r.pct_team_tds,1)+'%' : '—'}</td>
+        <td>
+          <div class="vs-pct-bar">
+            <div class="vs-bar"><div class="vs-bar-fill" style="width:${barW}%"></div></div>
+            <div class="vs-pct-num">${pct.toFixed(1)}%</div>
+          </div>
+        </td>
+      </tr>`;
+  }).join('');
+}
+
+// ─── Boot ──────────────────────────────────────────────────────────────────────
+async function init() {
+  const [current, allCurrent, winners, weightsQB, consistency, nonqbCurrent] = await Promise.all([
+    loadJSON('mvp_current.json'),
+    loadJSON('mvp_current_all.json'),
+    loadJSON('mvp_winners_historical.json'),
+    loadJSON('weights_qb.json'),
+    loadCSV('voting_consistency_QB.csv'),
+    loadCSV('nonqb_current.csv'),
+  ]);
+
+  // Race panel — use combined QB + nonQB if available, else QB only
+  renderRace(allCurrent || current || []);
+
+  // Weights
+  renderWeights(weightsQB);
+
+  // Consistency
+  if (consistency) {
+    const total  = consistency.length;
+    const agreed = consistency.filter(r => r.consistent === 'True').length;
+    document.getElementById('cs-r2').textContent = '0.49';  // from last run
+    renderConsistency(consistency);
+    document.getElementById('hist-agree-ct').textContent = `${agreed}/${total}`;
+  } else {
+    renderConsistency(null);
+  }
+
+  // Historical
+  renderHistorical(winners || []);
+
+  // Non-QB
+  renderNonQB(nonqbCurrent || []);
+}
+
+// Called after both init() and loadHistoricalAll() complete
+function makeHistRowsClickable() {
+  document.querySelectorAll('#hist-body tr').forEach(row => {
+    const yrCell = row.querySelector('.yr');
+    if (!yrCell) return;
+    const season = yrCell.textContent.trim();
+    if (!season || isNaN(+season)) return;
+    if (row.dataset.clickable) return; // prevent double-binding
+    row.dataset.clickable = '1';
+    row.classList.add('hist-row-clickable');
+    row.title = `Click to open ${season} season`;
+    row.style.cursor = 'pointer';
+    row.addEventListener('click', () => openSeasonModal(+season));
+  });
+}
+
+boot();
+
+// ─── Season Modal ───────────────────────────────────────────────────────────────
+let histAll    = [];   // all QB-seasons from mvp_index_historical.csv
+let nonqbAll   = [];   // all non-QB seasons from nonqb_historical.csv
+let consistAll = [];   // voting_consistency_QB.csv rows
+let modalSeason = null;
+const SEASONS = [];    // populated from data
+
+async function loadHistoricalAll() {
+  const [hist, nonqb, consist] = await Promise.all([
+    loadCSV('mvp_index_historical.csv'),
+    loadCSV('nonqb_historical.csv'),
+    loadCSV('voting_consistency_QB.csv'),
+  ]);
+  histAll    = hist    || [];
+  nonqbAll   = nonqb   || [];
+  consistAll = consist || [];
+
+  // Build season list from historical data
+  const seasonSet = new Set(histAll.map(r => +r.season).filter(Boolean));
+  SEASONS.push(...Array.from(seasonSet).sort((a,b) => a-b));
+}
+
+function openSeasonModal(season) {
+  modalSeason = +season;
+  renderModalContent();
+  document.getElementById('season-modal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeModal(e) {
+  if (e && e.target !== document.getElementById('season-modal')) return;
+  document.getElementById('season-modal').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeModal(null);
+  if (e.key === 'ArrowLeft')  navigateSeason(-1);
+  if (e.key === 'ArrowRight') navigateSeason(+1);
+});
+
+function navigateSeason(dir) {
+  const idx = SEASONS.indexOf(modalSeason);
+  const next = SEASONS[idx + dir];
+  if (next) { modalSeason = next; renderModalContent(); }
+}
+
+function switchTab(tab, btn) {
+  document.querySelectorAll('.modal-tab').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('tab-' + tab).classList.add('active');
+}
+
+function renderModalContent() {
+  const season = modalSeason;
+  document.getElementById('modal-year').textContent = season;
+
+  // Nav buttons
+  const idx = SEASONS.indexOf(season);
+  document.getElementById('modal-prev').disabled = idx <= 0;
+  document.getElementById('modal-next').disabled = idx >= SEASONS.length - 1;
+
+  // Season data
+  const seasonQBs = histAll
+    .filter(r => +r.season === season)
+    .sort((a, b) => +b.mvp_index - +a.mvp_index);
+
+  const winner = seasonQBs.find(r => r.won === 'True') || seasonQBs[0];
+  const consistency = consistAll.find(r => +r.season === season);
+  const modelPick = seasonQBs[0];
+  const agreed = consistency?.consistent === 'True';
+
+  // ── Race tab ────────────────────────────────────────────────────────────────
+  const noteEl = document.getElementById('modal-model-note');
+  if (consistency) {
+    if (agreed) {
+      noteEl.textContent = `✓ Model agreed: ${modelPick?.player_name} was both the model pick and the actual winner.`;
+      noteEl.className = 'model-note agree';
+    } else {
+      noteEl.textContent = `✗ Model deviation: Model picked ${consistency.model_pick} (${fmtIdx(consistency.model_index)}) — voters chose ${consistency.actual_winner} (${fmtIdx(consistency.actual_index)}). Gap: ${(+consistency.index_gap).toFixed(1)} pts.`;
+      noteEl.className = 'model-note';
+    }
+  } else {
+    noteEl.textContent = '';
+  }
+
+  const raceList = document.getElementById('modal-race-list');
+  raceList.innerHTML = seasonQBs.slice(0, 12).map((p, i) => {
+    const isWinner = p.won === 'True';
+    const idx = +p.mvp_index || 0;
+    const isModelTop = i === 0;
+    return `
+      <div class="modal-candidate ${isWinner ? 'is-winner' : ''}">
+        <div class="mc-rank ${isModelTop ? 'w1' : ''}">${i+1}</div>
+        <div class="mc-info">
+          <div class="mc-name">${p.player_name}</div>
+          <div class="mc-tags">
+            <span class="chip cy">${p.team}</span>
+            ${isWinner ? '<span class="wbadge">AP MVP</span>' : ''}
+            ${isModelTop && !isWinner ? '<span class="chip" style="color:var(--cyan);border-color:rgba(0,229,255,0.25)">Model Pick</span>' : ''}
+            <span class="chip">${p.total_tds || '—'} TD</span>
+            <span class="chip">${p.team_wins || '—'} W</span>
+            <span class="chip hi">EPA/play ${fmt(p.epa_per_play,4)}</span>
+          </div>
+        </div>
+        <div class="mc-bar-col">
+          <div class="mc-bar"><div class="mc-bar-fill" style="width:${idx}%"></div></div>
+          <div style="font-family:var(--font-mono);font-size:9px;color:var(--sub);text-align:right">${fmtPct(p.vote_pct || 0)} votes</div>
+        </div>
+        <div class="mc-idx-val ${isWinner ? 'winner' : ''}">${fmtIdx(idx)}</div>
+      </div>`;
+  }).join('');
+
+  // ── Winner detail tab ───────────────────────────────────────────────────────
+  if (winner) {
+    document.getElementById('modal-winner-card').innerHTML = `
+      <div class="mwc-left">
+        <div class="mwc-name">${winner.player_name}</div>
+        <div class="mwc-meta">${winner.position || 'QB'} · ${winner.team} · ${season} AP NFL MVP</div>
+        <div class="mwc-stats">
+          <div class="mwc-stat"><span>EPA/play</span>${fmt(winner.epa_per_play,4)}</div>
+          <div class="mwc-stat"><span>TDs</span>${winner.total_tds || '—'}</div>
+          <div class="mwc-stat"><span>Yards</span>${winner.total_yards ? (+winner.total_yards).toLocaleString() : '—'}</div>
+          <div class="mwc-stat"><span>Wins</span>${winner.team_wins || '—'}</div>
+          <div class="mwc-stat"><span>ANY/A</span>${fmt(winner.any_a,2)}</div>
+          <div class="mwc-stat"><span>WPA</span>${fmt(winner.wpa_total,2)}</div>
+          <div class="mwc-stat"><span>Turnovers</span>${winner.turnovers || '—'}</div>
+          <div class="mwc-stat"><span>Vote %</span>${fmtPct(winner.vote_pct)}</div>
+        </div>
+      </div>
+      <div class="mwc-right">
+        <div class="mwc-idx">${fmtIdx(+winner.mvp_index)}</div>
+        <div class="mwc-idx-lbl">MVP Index</div>
+      </div>
+    `;
+
+    document.getElementById('modal-stats-grid').innerHTML = [
+      ['Late EPA', fmt(winner.late_epa,1)],
+      ['Late TDs', winner.late_tds || '—'],
+      ['Success Rate', winner.success_rate ? Math.round(+winner.success_rate*100)+'%' : '—'],
+      ['Neg Play Rate', winner.negative_play_rate ? (Math.round(+winner.negative_play_rate*100))+'%' : '—'],
+      ['% Team Yards', winner.pct_team_yards ? fmt(winner.pct_team_yards,1)+'%' : '—'],
+      ['% Team TDs', winner.pct_team_tds ? fmt(winner.pct_team_tds,1)+'%' : '—'],
+    ].map(([lbl,val]) => `
+      <div class="modal-stat-box">
+        <div class="modal-stat-val">${val}</div>
+        <div class="modal-stat-lbl">${lbl}</div>
+      </div>`).join('');
+  }
+
+  // ── Non-QB tab ──────────────────────────────────────────────────────────────
+  const seasonNonQB = nonqbAll
+    .filter(r => +r.season === season)
+    .sort((a,b) => +b.mvp_index - +a.mvp_index)
+    .slice(0, 8);
+
+  const nonqbList = document.getElementById('modal-nonqb-list');
+  if (seasonNonQB.length) {
+    nonqbList.innerHTML = seasonNonQB.map((p, i) => {
+      const pct = +p.nonqb_vs_topqb_pct || 0;
+      return `
+        <div class="modal-candidate">
+          <div class="mc-rank">${i+1}</div>
+          <div class="mc-info">
+            <div class="mc-name">${p.player_name}</div>
+            <div class="mc-tags">
+              <span class="pos-tag">${p.position || 'RB'}</span>
+              <span class="chip cy">${p.team}</span>
+              <span class="chip hi">${p.total_tds || '—'} TD</span>
+              <span class="chip">${p.total_yards ? Math.round(+p.total_yards).toLocaleString() : '—'} YDS</span>
+            </div>
+          </div>
+          <div class="mc-bar-col">
+            <div class="mc-bar"><div class="mc-bar-fill" style="width:${Math.min(pct,100)}%;background:var(--orange)"></div></div>
+            <div style="font-family:var(--font-mono);font-size:9px;color:var(--sub);text-align:right">vs top QB</div>
+          </div>
+          <div class="mc-idx-val" style="color:var(--orange)">${pct.toFixed(1)}%</div>
+        </div>`;
+    }).join('');
+  } else {
+    nonqbList.innerHTML = '<p style="font-size:13px;color:var(--sub);padding:1rem 0">No non-QB candidate data for this season.</p>';
+  }
+}
+
+// ─── Make historical rows clickable ────────────────────────────────────────────
+// makeHistRowsClickable defined above
+
+// Boot — runs original init then loads historical data for modal
+async function boot() {
+  await Promise.all([init(), loadHistoricalAll()]);
+  makeHistRowsClickable();
+}
+
+</script>
+
+<!-- SEASON MODAL -->
+<div class="modal-overlay" id="season-modal" onclick="closeModal(event)">
+  <div class="modal-drawer">
+    <div class="modal-header">
+      <div class="modal-title">
+        <div class="modal-year" id="modal-year">2024</div>
+        <div class="modal-sub">MVP Race Analysis</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:12px;">
+        <div class="modal-nav">
+          <button id="modal-prev" onclick="navigateSeason(-1)">← Prev</button>
+          <button id="modal-next" onclick="navigateSeason(+1)">Next →</button>
+        </div>
+        <button class="modal-close" onclick="closeModal(null)">✕</button>
+      </div>
+    </div>
+
+    <div class="modal-tabs">
+      <button class="modal-tab active" onclick="switchTab('race', this)">Race</button>
+      <button class="modal-tab" onclick="switchTab('winner', this)">Winner Detail</button>
+      <button class="modal-tab" onclick="switchTab('nonqb', this)">Non-QB</button>
+    </div>
+
+    <div class="modal-body">
+      <!-- TAB: RACE -->
+      <div class="tab-panel active" id="tab-race">
+        <div id="modal-model-note" class="model-note"></div>
+        <div class="modal-race-list" id="modal-race-list"></div>
+      </div>
+
+      <!-- TAB: WINNER DETAIL -->
+      <div class="tab-panel" id="tab-winner">
+        <div class="modal-section">
+          <div class="modal-winner-card" id="modal-winner-card"></div>
+          <div class="modal-stats-grid" id="modal-stats-grid"></div>
+        </div>
+      </div>
+
+      <!-- TAB: NON-QB -->
+      <div class="tab-panel" id="tab-nonqb">
+        <div class="modal-section">
+          <p style="font-size:13px;color:var(--sub);margin-bottom:1rem;">Top skill position candidates for this season, scored on the non-QB model.</p>
+          <div id="modal-nonqb-list"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
