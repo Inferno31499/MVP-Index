@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MVMVP Hierarchy — Greatest MVP Seasons Since 1999</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@400;500&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg:        #08090b;
+      --surface:   #0f1115;
+      --surface2:  #161a20;
+      --surface3:  #1c2028;
+      --border:    rgba(255,255,255,0.07);
+      --border2:   rgba(255,255,255,0.12);
+      --gold:      #f5c518;
+      --gold-dim:  rgba(245,197,24,0.12);
+      --gold-glow: rgba(245,197,24,0.05);
+      --gold2:     #c9a227;
+      --platinum:  #e8e8e8;
+      --cyan:      #00e5ff;
+      --red:       #ff3b3b;
+      --green:     #00e676;
+      --orange:    #ff9500;
+      --purple:    #bf5fff;
+      --text:      #f0f2f5;
+      --sub:       #7a8494;
+      --muted:     #3d4451;
+      --font-disp: 'Bebas Neue', sans-serif;
+      --font-body: 'DM Sans', sans-serif;
+      --font-mono: 'DM Mono', monospace;
+    }
+    html { scroll-behavior: smooth; }
+    body { background: var(--bg); color: var(--text); font-family: var(--font-body); font-size: 15px; line-height: 1.65; overflow-x: hidden; }
+
+    /* NAV */
+    nav { position: sticky; top: 0; z-index: 200; height: 52px; display: flex; align-items: center; justify-content: space-between; padding: 0 2rem; background: rgba(8,9,11,0.92); backdrop-filter: blur(16px); border-bottom: 1px solid var(--border); }
+    .logo { display: flex; align-items: baseline; gap: 8px; text-decoration: none; }
+    .logo-mvp { font-family: var(--font-disp); font-size: 26px; letter-spacing: 0.08em; color: var(--gold); }
+    .logo-sub { font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.14em; color: var(--sub); text-transform: uppercase; line-height: 1.3; }
+    .nav-back { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--sub); text-decoration: none; display: flex; align-items: center; gap: 6px; transition: color 0.15s; }
+    .nav-back:hover { color: var(--gold); }
+
+    /* HERO */
+    .hero { position: relative; padding: 5rem 2rem 3rem; max-width: 1280px; margin: 0 auto; }
+    .hero-bg { position: fixed; inset: 0; background: radial-gradient(ellipse 50% 40% at 50% 0%, rgba(245,197,24,0.05) 0%, transparent 60%); pointer-events: none; z-index: 0; }
+    .hero-eyebrow { display: flex; align-items: center; gap: 10px; margin-bottom: 1rem; }
+    .eyebrow-line { width: 32px; height: 1px; background: var(--gold); }
+    .eyebrow-text { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--gold); }
+    .hero h1 { font-family: var(--font-disp); font-size: clamp(56px, 8vw, 110px); line-height: 0.88; letter-spacing: 0.02em; margin-bottom: 1rem; }
+    .hero h1 .gold { color: var(--gold); }
+    .hero-desc { max-width: 620px; font-size: 15px; font-weight: 300; color: var(--sub); line-height: 1.8; margin-bottom: 2rem; }
+    .hero-desc strong { color: var(--text); font-weight: 500; }
+
+    /* METHODOLOGY NOTE */
+    .method-note { display: inline-flex; align-items: flex-start; gap: 12px; background: var(--surface); border: 1px solid var(--border2); padding: 1rem 1.25rem; max-width: 720px; margin-bottom: 3rem; }
+    .method-icon { font-family: var(--font-mono); font-size: 10px; color: var(--gold); white-space: nowrap; margin-top: 2px; }
+    .method-text { font-family: var(--font-mono); font-size: 11px; line-height: 1.7; color: var(--sub); }
+    .method-text strong { color: var(--text); }
+
+    /* FILTERS */
+    .filters { display: flex; align-items: center; gap: 12px; margin-bottom: 2rem; flex-wrap: wrap; }
+    .filter-label { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--sub); }
+    .filter-btn { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; padding: 5px 12px; border: 1px solid var(--border2); background: transparent; color: var(--sub); cursor: pointer; transition: all 0.15s; border-radius: 2px; }
+    .filter-btn:hover { color: var(--text); border-color: var(--text); }
+    .filter-btn.active { color: var(--gold); border-color: rgba(245,197,24,0.5); background: var(--gold-dim); }
+    .filter-sep { width: 1px; height: 20px; background: var(--border2); }
+
+    /* RANKING LIST */
+    .ranking-list { max-width: 1280px; margin: 0 auto; padding: 0 2rem 6rem; }
+
+    /* TIER LABELS */
+    .tier-label { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--sub); padding: 0.5rem 0; margin: 2rem 0 0.75rem; display: flex; align-items: center; gap: 12px; }
+    .tier-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+    .tier-label.tier-god { color: var(--gold); }
+    .tier-label.tier-elite { color: var(--platinum); }
+    .tier-label.tier-great { color: var(--cyan); }
+    .tier-label.tier-solid { color: var(--sub); }
+
+    /* SEASON CARD */
+    .season-card { display: grid; grid-template-columns: 72px 1fr auto; gap: 0; background: var(--surface); border: 1px solid var(--border); margin-bottom: 3px; transition: border-color 0.15s, background 0.15s; cursor: pointer; overflow: hidden; }
+    .season-card:hover { border-color: var(--border2); background: var(--surface2); }
+    .season-card.rank-1 { border-color: rgba(245,197,24,0.4); background: rgba(245,197,24,0.03); }
+    .season-card.rank-2 { border-color: rgba(200,200,200,0.3); }
+    .season-card.rank-3 { border-color: rgba(180,100,20,0.35); }
+    .season-card.winner { border-left: 3px solid var(--gold); }
+    .season-card.non-winner { border-left: 3px solid var(--muted); }
+    .season-card.deviated { border-left: 3px solid var(--red); }
+
+    /* RANK COLUMN */
+    .card-rank { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 1.25rem 0; background: var(--surface2); border-right: 1px solid var(--border); min-width: 72px; }
+    .rank-num { font-family: var(--font-disp); font-size: 32px; line-height: 1; }
+    .rank-num.r1 { color: var(--gold); font-size: 36px; }
+    .rank-num.r2 { color: var(--platinum); }
+    .rank-num.r3 { color: #cd7f32; }
+    .rank-num.rn { color: var(--muted); }
+    .rank-medal { font-size: 14px; margin-top: 2px; }
+
+    /* MAIN CONTENT */
+    .card-main { padding: 1rem 1.25rem; display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+    .card-top { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+    .card-name { font-family: var(--font-disp); font-size: 26px; line-height: 1; color: var(--text); }
+    .card-season { font-family: var(--font-disp); font-size: 26px; line-height: 1; color: var(--gold); }
+    .card-team { font-family: var(--font-mono); font-size: 11px; color: var(--sub); }
+    .card-badges { display: flex; gap: 5px; flex-wrap: wrap; align-items: center; }
+    .badge { font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.06em; padding: 2px 6px; border-radius: 2px; text-transform: uppercase; }
+    .badge.mvp    { color: var(--gold);   background: var(--gold-dim);          border: 1px solid rgba(245,197,24,0.3); }
+    .badge.nonqb  { color: var(--orange); background: rgba(255,149,0,0.1);      border: 1px solid rgba(255,149,0,0.25); }
+    .badge.unani  { color: var(--green);  background: rgba(0,230,118,0.08);     border: 1px solid rgba(0,230,118,0.25); }
+    .badge.dev    { color: var(--red);    background: rgba(255,59,59,0.08);     border: 1px solid rgba(255,59,59,0.25); }
+    .badge.notwin { color: var(--sub);    background: var(--surface3);          border: 1px solid var(--border2); }
+    .card-stats { display: flex; gap: 1.5rem; flex-wrap: wrap; }
+    .stat { display: flex; flex-direction: column; }
+    .stat-val { font-family: var(--font-mono); font-size: 14px; color: var(--text); font-weight: 500; }
+    .stat-val.hi { color: var(--gold); }
+    .stat-lbl { font-family: var(--font-mono); font-size: 9px; color: var(--sub); letter-spacing: 0.08em; text-transform: uppercase; margin-top: 1px; }
+    .card-bar { height: 2px; background: var(--surface3); border-radius: 1px; margin-top: 4px; }
+    .card-bar-fill { height: 100%; border-radius: 1px; background: linear-gradient(90deg, var(--gold), rgba(245,197,24,0.2)); }
+
+    /* SCORE COLUMN */
+    .card-score { display: flex; flex-direction: column; align-items: flex-end; justify-content: center; padding: 1rem 1.5rem; border-left: 1px solid var(--border); min-width: 120px; gap: 4px; }
+    .score-raw { font-family: var(--font-disp); font-size: 42px; line-height: 1; color: var(--gold); }
+    .score-lbl { font-family: var(--font-mono); font-size: 9px; color: var(--sub); letter-spacing: 0.08em; text-transform: uppercase; }
+    .score-season-rank { font-family: var(--font-mono); font-size: 10px; color: var(--sub); }
+    .score-season-rank span { color: var(--gold); }
+
+    /* EXPAND */
+    .card-expand { max-height: 0; overflow: hidden; transition: max-height 0.3s ease; border-top: 0px solid var(--border); background: var(--surface2); }
+    .card-expand.open { max-height: 200px; border-top-width: 1px; }
+    .expand-inner { padding: 1rem 1.5rem; display: grid; grid-template-columns: repeat(6, 1fr); gap: 1rem; }
+    .expand-stat { }
+    .expand-val { font-family: var(--font-mono); font-size: 13px; color: var(--text); }
+    .expand-lbl { font-family: var(--font-mono); font-size: 9px; color: var(--sub); letter-spacing: 0.08em; text-transform: uppercase; margin-top: 2px; }
+
+    /* LOADING */
+    .loading { display: flex; align-items: center; justify-content: center; padding: 4rem; gap: 8px; color: var(--sub); font-family: var(--font-mono); font-size: 11px; }
+    .spinner { width: 14px; height: 14px; border: 1px solid var(--muted); border-top-color: var(--gold); border-radius: 50%; animation: spin 0.7s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* SUMMARY STATS */
+    .summary-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); max-width: 1280px; margin: 0 2rem 3rem; }
+    .summary-box { background: var(--surface); padding: 1.25rem 1.5rem; }
+    .summary-val { font-family: var(--font-disp); font-size: 40px; color: var(--gold); line-height: 1; }
+    .summary-lbl { font-family: var(--font-mono); font-size: 10px; color: var(--sub); letter-spacing: 0.08em; text-transform: uppercase; margin-top: 4px; }
+
+    /* FOOTER */
+    footer { border-top: 1px solid var(--border); padding: 2rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; }
+    .flogo { font-family: var(--font-disp); font-size: 22px; color: var(--gold); letter-spacing: 0.08em; }
+    .fnote { font-family: var(--font-mono); font-size: 10px; color: var(--muted); letter-spacing: 0.08em; }
+
+    @media (max-width: 700px) {
+      .season-card { grid-template-columns: 56px 1fr; }
+      .card-score { display: none; }
+      .expand-inner { grid-template-columns: repeat(3,1fr); }
+      .summary-row { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="hero-bg"></div>
+
+<nav>
+  <a class="logo" href="index.html">
+    <span class="logo-mvp">MVP</span>
+    <span class="logo-sub">Metric<br/>Victory<br/>Projection</span>
+  </a>
+  <a class="nav-back" href="index.html">← Back to MVP Index</a>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-eyebrow">
+    <div class="eyebrow-line"></div>
+    <span class="eyebrow-text">Cross-Era Ranking · 1999 – Present</span>
+  </div>
+  <h1>MVMVP<br/><span class="gold">HIERARCHY</span></h1>
+  <p class="hero-desc">
+    The greatest MVP-caliber seasons since 1999 — ranked by <strong>absolute dominance</strong>, not relative to a single year's field. Every season scored on the same 19-metric regression model, then ranked by raw weighted z-score across the entire era.
+  </p>
+
+  <div class="method-note">
+    <span class="method-icon">// NOTE</span>
+    <span class="method-text">
+      The standard MVP Index is normalized <strong>within each season</strong> (0–100), making it impossible to compare across years. This ranking uses the <strong>raw weighted z-score</strong> — an absolute measure of how dominant each season was relative to all QBs across all seasons since 1999. Higher = more historically dominant, regardless of era.
+    </span>
+  </div>
+</div>
+
+<!-- SUMMARY -->
+<div class="summary-row" id="summary-row">
+  <div class="summary-box"><div class="summary-val" id="s-total">—</div><div class="summary-lbl">Seasons Ranked</div></div>
+  <div class="summary-box"><div class="summary-val" id="s-top">—</div><div class="summary-lbl">Greatest Season</div></div>
+  <div class="summary-box"><div class="summary-val" id="s-players">—</div><div class="summary-lbl">Unique Players</div></div>
+  <div class="summary-box"><div class="summary-val" id="s-nonwinner">—</div><div class="summary-lbl">Non-Winner Top-10</div></div>
+</div>
+
+<!-- FILTERS -->
+<div class="ranking-list">
+  <div class="filters">
+    <span class="filter-label">Filter:</span>
+    <button class="filter-btn active" onclick="setFilter('all', this)">All Seasons</button>
+    <button class="filter-btn" onclick="setFilter('winners', this)">MVP Winners Only</button>
+    <button class="filter-btn" onclick="setFilter('non-winners', this)">Non-Winners</button>
+    <div class="filter-sep"></div>
+    <button class="filter-btn" onclick="setFilter('qb', this)">QBs Only</button>
+    <button class="filter-btn" onclick="setFilter('nonqb', this)">Non-QBs Only</button>
+    <div class="filter-sep"></div>
+    <button class="filter-btn" onclick="setFilter('deviated', this)">Voter Deviations</button>
+  </div>
+
+  <div id="ranking-container">
+    <div class="loading"><div class="spinner"></div> Loading hierarchy data...</div>
+  </div>
+</div>
+
+<footer>
+  <div>
+    <div class="flogo">MVP</div>
+    <div class="fnote" style="margin-top:4px">METRIC VICTORY PROJECTION</div>
+  </div>
+  <div class="fnote">Raw z-score ranking across all seasons 1999–present · nflFastR · AP Vote Records</div>
+</footer>
+
+<script>
+const DATA_BASE = 'data';
+let allData = [];
+let consistData = [];
+let currentFilter = 'all';
+
+async function loadJSON(f) {
+  try {
+    const r = await fetch(`${DATA_BASE}/${f}`);
+    if (!r.ok) throw new Error(r.status);
+    return await r.json();
+  } catch(e) { console.warn('load failed:', f, e.message); return null; }
+}
+
+async function loadCSV(f) {
+  try {
+    const r = await fetch(`${DATA_BASE}/${f}`);
+    if (!r.ok) throw new Error(r.status);
+    const text = await r.text();
+    const lines = text.trim().split('\n');
+    const headers = lines[0].split(',');
+    return lines.slice(1).map(line => {
+      const vals = line.split(',');
+      const obj = {};
+      headers.forEach((h,i) => obj[h.trim()] = (vals[i]||'').trim());
+      return obj;
+    });
+  } catch(e) { console.warn('csv load failed:', f, e.message); return null; }
+}
+
+const fmt  = (v, d=1) => v == null || isNaN(+v) ? '—' : (+v).toFixed(d);
+const fmtI = v => v == null || isNaN(+v) ? '—' : (+v).toFixed(2);
+
+function getTierLabel(rank) {
+  if (rank <= 5)  return { label: '// GOD TIER — The Untouchable Seasons', cls: 'tier-god' };
+  if (rank <= 15) return { label: '// ELITE TIER — All-Time Dominant',      cls: 'tier-elite' };
+  if (rank <= 30) return { label: '// GREAT TIER — Historically Strong',    cls: 'tier-great' };
+  return             { label: '// SOLID TIER — Strong Candidacies',          cls: 'tier-solid' };
+}
+
+function getRankClass(rank) {
+  if (rank === 1) return 'r1';
+  if (rank === 2) return 'r2';
+  if (rank === 3) return 'r3';
+  return 'rn';
+}
+
+function getMedal(rank) {
+  if (rank === 1) return '🥇';
+  if (rank === 2) return '🥈';
+  if (rank === 3) return '🥉';
+  return '';
+}
+
+function setFilter(f, btn) {
+  currentFilter = f;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderRanking(allData);
+}
+
+function getFilteredData(data) {
+  switch(currentFilter) {
+    case 'winners':    return data.filter(d => d.won === 'True' || d.won === true);
+    case 'non-winners':return data.filter(d => d.won !== 'True' && d.won !== true);
+    case 'qb':         return data.filter(d => !d.position || d.position === 'QB');
+    case 'nonqb':      return data.filter(d => d.position && d.position !== 'QB');
+    case 'deviated':   return data.filter(d => {
+      const c = consistData.find(r => +r.season === +d.season);
+      return c && c.consistent === 'False' && (d.won === 'True' || d.won === true);
+    });
+    default: return data;
+  }
+}
+
+function renderRanking(data) {
+  const filtered = getFilteredData(data);
+  const container = document.getElementById('ranking-container');
+
+  if (!filtered.length) {
+    container.innerHTML = '<p style="color:var(--sub);font-family:var(--font-mono);font-size:12px;padding:2rem">No seasons match this filter.</p>';
+    return;
+  }
+
+  // Find max raw_index for bar scaling
+  const maxRaw = Math.max(...filtered.map(d => +d.raw_index || 0));
+
+  let html = '';
+  let lastTier = null;
+  const top50 = filtered.slice(0, 50);
+
+  top50.forEach((d, i) => {
+    const displayRank = i + 1;
+    const tier = getTierLabel(displayRank);
+    if (tier.label !== lastTier) {
+      html += `<div class="tier-label ${tier.cls}">${tier.label}</div>`;
+      lastTier = tier.label;
+    }
+
+    const isWinner   = d.won === 'True' || d.won === true;
+    const isNonQB    = d.position && d.position !== 'QB';
+    const consistency = consistData.find(r => +r.season === +d.season);
+    const deviated   = consistency && consistency.consistent === 'False' && isWinner;
+    const unanimous  = d.vote_pct && +d.vote_pct >= 0.98;
+    const rawIdx     = +d.raw_index || 0;
+    const barW       = Math.round(rawIdx / maxRaw * 100);
+    const mvpIdx     = +d.mvp_index || 0;
+
+    const cardClass = [
+      'season-card',
+      isWinner ? 'winner' : 'non-winner',
+      deviated ? 'deviated' : '',
+      displayRank === 1 ? 'rank-1' : displayRank === 2 ? 'rank-2' : displayRank === 3 ? 'rank-3' : '',
+    ].filter(Boolean).join(' ');
+
+    const badges = [
+      isWinner  ? `<span class="badge mvp">AP MVP</span>` : `<span class="badge notwin">Did Not Win</span>`,
+      isNonQB   ? `<span class="badge nonqb">${d.position}</span>` : '',
+      unanimous ? `<span class="badge unani">Unanimous</span>` : '',
+      deviated  ? `<span class="badge dev">Voter Deviation</span>` : '',
+    ].filter(Boolean).join('');
+
+    html += `
+      <div class="${cardClass}" onclick="toggleExpand(this)">
+        <div class="card-rank">
+          <div class="rank-num ${getRankClass(displayRank)}">${displayRank}</div>
+          <div class="rank-medal">${getMedal(displayRank)}</div>
+        </div>
+        <div class="card-main">
+          <div class="card-top">
+            <span class="card-name">${d.player_name}</span>
+            <span class="card-season">${d.season}</span>
+            <span class="card-team">${d.team || '—'}</span>
+          </div>
+          <div class="card-badges">${badges}</div>
+          <div class="card-stats">
+            <div class="stat">
+              <div class="stat-val hi">${d.total_tds || '—'}</div>
+              <div class="stat-lbl">Total TDs</div>
+            </div>
+            <div class="stat">
+              <div class="stat-val">${fmt(d.epa_per_play,4)}</div>
+              <div class="stat-lbl">EPA / Play</div>
+            </div>
+            <div class="stat">
+              <div class="stat-val">${fmt(d.any_a,2)}</div>
+              <div class="stat-lbl">ANY / A</div>
+            </div>
+            <div class="stat">
+              <div class="stat-val">${d.team_wins || '—'}</div>
+              <div class="stat-lbl">Wins</div>
+            </div>
+            <div class="stat">
+              <div class="stat-val">${d.total_yards ? Math.round(+d.total_yards).toLocaleString() : '—'}</div>
+              <div class="stat-lbl">Total Yards</div>
+            </div>
+            <div class="stat">
+              <div class="stat-val">${d.vote_pct ? Math.round(+d.vote_pct*100)+'%' : '—'}</div>
+              <div class="stat-lbl">Vote Share</div>
+            </div>
+          </div>
+          <div class="card-bar"><div class="card-bar-fill" style="width:${barW}%"></div></div>
+        </div>
+        <div class="card-score">
+          <div class="score-raw">${fmtI(rawIdx)}</div>
+          <div class="score-lbl">Raw Z-Score</div>
+          <div class="score-season-rank">Season rank: <span>${mvpIdx.toFixed(1)}</span></div>
+        </div>
+      </div>
+      <div class="card-expand">
+        <div class="expand-inner">
+          <div class="expand-stat"><div class="expand-val">${fmt(d.wpa_total,2)}</div><div class="expand-lbl">WPA Total</div></div>
+          <div class="expand-stat"><div class="expand-val">${fmt(d.late_epa,1)}</div><div class="expand-lbl">Dec. EPA</div></div>
+          <div class="expand-stat"><div class="expand-val">${d.late_tds || '—'}</div><div class="expand-lbl">Dec. TDs</div></div>
+          <div class="expand-stat"><div class="expand-val">${d.success_rate ? Math.round(+d.success_rate*100)+'%' : '—'}</div><div class="expand-lbl">Success Rate</div></div>
+          <div class="expand-stat"><div class="expand-val">${d.pct_team_yards ? fmt(d.pct_team_yards,1)+'%' : '—'}</div><div class="expand-lbl">% Team Yards</div></div>
+          <div class="expand-stat"><div class="expand-val">${d.turnovers || '—'}</div><div class="expand-lbl">Turnovers</div></div>
+        </div>
+      </div>`;
+  });
+
+  container.innerHTML = html;
+}
+
+function toggleExpand(card) {
+  const expand = card.nextElementSibling;
+  if (!expand || !expand.classList.contains('card-expand')) return;
+  expand.classList.toggle('open');
+}
+
+async function init() {
+  const [hierarchy, consist] = await Promise.all([
+    loadJSON('mvp_hierarchy_all.json'),
+    loadCSV('voting_consistency_qb.csv'),
+  ]);
+
+  consistData = consist || [];
+
+  if (!hierarchy || !hierarchy.length) {
+    document.getElementById('ranking-container').innerHTML =
+      '<div style="font-family:var(--font-mono);font-size:12px;color:var(--red);padding:2rem">Could not load hierarchy data. Make sure you ran step 3 of the pipeline to generate mvp_hierarchy_all.json.</div>';
+    return;
+  }
+
+  // Sort by raw_index descending, assign display ranks
+  allData = hierarchy
+    .filter(d => d.raw_index !== undefined && d.raw_index !== '')
+    .sort((a,b) => +b.raw_index - +a.raw_index);
+
+  // Summary stats
+  const winners  = allData.filter(d => d.won === 'True');
+  const players  = new Set(allData.slice(0,50).map(d => d.player_name)).size;
+  const top10    = allData.slice(0,10);
+  const nonWinTop10 = top10.filter(d => d.won !== 'True').length;
+  const topSeason = allData[0];
+
+  document.getElementById('s-total').textContent   = Math.min(allData.length, 50);
+  document.getElementById('s-top').textContent     = topSeason ? `${topSeason.player_name.split('.')[1]?.trim() || topSeason.player_name} '${String(topSeason.season).slice(2)}` : '—';
+  document.getElementById('s-players').textContent = players;
+  document.getElementById('s-nonwinner').textContent = nonWinTop10;
+
+  renderRanking(allData);
+}
+
+init();
+</script>
+</body>
+</html>

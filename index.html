@@ -287,6 +287,7 @@
     <li><a href="#historical">Historical</a></li>
     <li><a href="#nonqb">Non-QB Compare</a></li>
     <li><a href="#methodology">Methodology</a></li>
+    <li><a href="hierarchy.html" style="color:var(--gold)">MVMVP Hierarchy</a></li>
   </ul>
   <span class="nav-pill" id="nav-season">NFL · 2025</span>
 </nav>
@@ -484,6 +485,24 @@
     </div>
   </div>
 
+  <!-- HIERARCHY TEASER -->
+  <div style="margin-bottom:4rem;">
+    <div class="sec-label">
+      <span>// MVMVP Hierarchy — Greatest Seasons Cross-Era</span><hr/>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:2rem;align-items:center;">
+      <div>
+        <h2 style="font-family:var(--font-disp);font-size:42px;line-height:1;margin-bottom:1rem;">The All-Time<br/><span style="color:var(--gold)">Ranking</span></h2>
+        <p style="font-size:14px;color:var(--sub);line-height:1.8;margin-bottom:1.5rem;">The standard MVP Index is normalized within each season — so comparing Mahomes 2018 to Lamar 2019 is apples to oranges. The MVMVP Hierarchy uses raw weighted z-scores to rank every season on the same absolute scale since 1999.</p>
+        <a href="hierarchy.html" style="font-family:var(--font-mono);font-size:11px;font-weight:500;letter-spacing:0.12em;text-transform:uppercase;color:var(--bg);background:var(--gold);border:none;padding:13px 28px;text-decoration:none;">Open Hierarchy →</a>
+      </div>
+      <div style="background:var(--surface);border:1px solid var(--border);padding:1.5rem;">
+        <div style="font-family:var(--font-mono);font-size:10px;letter-spacing:0.1em;color:var(--sub);margin-bottom:1rem;">//  Preview — Top 5 All-Time</div>
+        <div id="hierarchy-preview" style="font-family:var(--font-mono);font-size:12px;color:var(--sub);">Loading...</div>
+      </div>
+    </div>
+  </div>
+
   <!-- NON-QB SECTION -->
   <div id="nonqb" class="nonqb-section">
     <div class="sec-label" style="margin-top: 2rem;">
@@ -530,6 +549,7 @@
   <ul class="flinks">
     <li><a href="https://www.nflfastr.com/" target="_blank">nflFastR</a></li>
     <li><a href="#methodology">Methodology</a></li>
+    <li><a href="hierarchy.html" style="color:var(--gold)">MVMVP Hierarchy</a></li>
     <li><a href="#">GitHub</a></li>
   </ul>
 </footer>
@@ -822,6 +842,17 @@ async function init() {
 
   // Non-QB
   renderNonQB(nonqbCurrent || []);
+
+  // Hierarchy preview
+  const hierarchy = await loadJSON('mvp_hierarchy_all.json');
+  if (hierarchy && hierarchy.length) {
+    const top5 = hierarchy.slice(0, 5);
+    document.getElementById('hierarchy-preview').innerHTML = top5.map((d,i) => `
+      <div style="display:flex;justify-content:space-between;align-items:baseline;padding:0.4rem 0;border-bottom:1px solid var(--border);">
+        <span><span style="color:var(--gold);margin-right:8px">${i+1}.</span>${d.player_name} <span style="color:var(--sub)">${d.season}</span></span>
+        <span style="color:var(--gold)">${(+d.raw_index).toFixed(2)}</span>
+      </div>`).join('');
+  }
 }
 
 // Called after both init() and loadHistoricalAll() complete
