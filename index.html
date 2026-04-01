@@ -796,7 +796,7 @@ async function init() {
     loadJSON('mvp_current_all.json'),
     loadJSON('mvp_winners_historical.json'),
     loadJSON('weights_qb.json'),
-    loadCSV('voting_consistency_QB.csv'),
+    loadCSV('voting_consistency_qb.csv'),
     loadCSV('nonqb_current.csv'),
   ]);
 
@@ -845,7 +845,7 @@ boot();
 // ─── Season Modal ───────────────────────────────────────────────────────────────
 let histAll    = [];   // all QB-seasons from mvp_index_historical.csv
 let nonqbAll   = [];   // all non-QB seasons from nonqb_historical.csv
-let consistAll = [];   // voting_consistency_QB.csv rows
+let consistAll = [];   // voting_consistency_qb.csv rows
 let modalSeason = null;
 const SEASONS = [];    // populated from data
 
@@ -853,7 +853,7 @@ async function loadHistoricalAll() {
   const [hist, nonqb, consist] = await Promise.all([
     loadCSV('mvp_index_historical.csv'),
     loadCSV('nonqb_historical.csv'),
-    loadCSV('voting_consistency_QB.csv'),
+    loadCSV('voting_consistency_qb.csv'),
   ]);
   histAll    = hist    || [];
   nonqbAll   = nonqb   || [];
